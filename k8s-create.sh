@@ -58,7 +58,7 @@ if [ ! -f debian-10.13.26-20240519-openstack-amd64.qcow2 ]; then
   wget https://cdimage.debian.org/cdimage/openstack/archive/10.13.26-20240519/debian-10.13.26-20240519-openstack-amd64.qcow2
 fi
 
-PubLicIP=192.168.11.200
+PublicIP=192.168.11.200
 
 cp debian-10.13.26-20240519-openstack-amd64.qcow2 debian-10.13.26-20240519-proxmox-amd64.qcow2
 
@@ -81,7 +81,7 @@ qm resize 9110 scsi0 +30G
 qm set 9110 --ciuser debian --cipassword debian
 
 # Set the IP configuration for net0
-qm set 9110 --ipconfig0 ip=${PubLicIP}/24,gw=192.168.11.1
+qm set 9110 --ipconfig0 ip=${PublicIP}/24,gw=192.168.11.1
 qm set 9110 --net0 model=virtio,bridge=vmbr0
 qm set 9110 --nameserver 1.1.1.1
 
