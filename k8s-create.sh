@@ -141,25 +141,25 @@ runcmd:
   - echo "@reboot echo 'Hello' > /root/test.txt 2>&1" | crontab -
 
   - echo "change hostname" > /home/debian/cloudinit-status.txt
-  # - sudo hostnamectl set-hostname gateway-01  && sudo sh -c 'echo 127.0.1.1 gateway-01 >> /etc/hosts'
-  # - |
-  #   sudo cat <<HOSTS > /etc/hosts
-  #   127.0.0.1 localhost
-  #   192.168.11.200 gateway-01.external gateway-01
+  - sudo hostnamectl set-hostname gateway-01  && sudo sh -c 'echo 127.0.1.1 gateway-01 >> /etc/hosts'
+  - |
+    sudo cat <<HOSTS > /etc/hosts
+    127.0.0.1 localhost
+    192.168.11.200 gateway-01.external gateway-01
 
-  #   ::1     localhost ip6-localhost ip6-loopback
-  #   ff02::1 ip6-allnodes
-  #   ff02::2 ip6-allrouters
+    ::1     localhost ip6-localhost ip6-loopback
+    ff02::1 ip6-allnodes
+    ff02::2 ip6-allrouters
 
-  #   192.168.8.10 controller-0
-  #   192.168.8.11 controller-1
-  #   192.168.8.12 controller-2
-  #   192.168.8.20 worker-0
-  #   192.168.8.21 worker-1
-  #   192.168.8.22 worker-2
-  #   HOSTS
-  # - echo "finish vm-setup.sh" > /home/debian/cloudinit-status.txt
-  # - reboot
+    192.168.8.10 controller-0
+    192.168.8.11 controller-1
+    192.168.8.12 controller-2
+    192.168.8.20 worker-0
+    192.168.8.21 worker-1
+    192.168.8.22 worker-2
+    HOSTS
+  - echo "finish vm-setup.sh" > /home/debian/cloudinit-status.txt
+  - reboot
 EOF
 
 qm set 9110 --cicustom "user=local:snippets/vm-setup.yaml"
@@ -270,12 +270,12 @@ for id in "${vmids_list[@]}"; do
     echo "$id"
 done
 
-echo "Server1: Server2の処理完了を待機中..."
+echo "Wait a gateway server setup..."
 ssh-keygen -f "/root/.ssh/known_hosts" -R ${PublicIP}
 while true; do
     sshpass -p "debian" ssh -o ConnectTimeout=10 -o StrictHostKeyChecking=no debian@${PublicIP} "ls /tmp/gateway" &> /dev/null
     if [ $? -eq 0 ]; then
-        echo "Server1: Server2の処理が完了!"
+        echo "Finish the gateway server setup."
         break
     fi
     sleep 1
