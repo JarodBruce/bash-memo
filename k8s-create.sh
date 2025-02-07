@@ -25,7 +25,7 @@ while [ -n "${1:-}" ]; do
     shift
 done
 
-sudo apt update && sudo apt install -y sshpass
+apt update && apt install -y sshpass
 
 vmids=($(qm list | tail -n +2 | awk '{print $1}'))
 
@@ -218,7 +218,7 @@ echo -e ' ' >> ${cloud_init_path}
 if [ ! -f ubuntu-24.04-server-cloudimg-amd64.img ]; then
   wget https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img
 fi
-cp -av /var/lib/vz/template/iso/ubuntu-24.04-server-cloudimg-amd64.img ubuntu-24.04.img
+cp -av ubuntu-24.04-server-cloudimg-amd64.img ubuntu-24.04.img
 virt-copy-in -a ubuntu-24.04.img  11_template.cfg /etc/cloud/cloud.cfg.d
 virt-copy-in -a ubuntu-24.04.img 11_template.cfg /etc/cloud/cloud.cfg.d
 
@@ -250,6 +250,7 @@ for i in "${!vm_list[@]}"; do
   (
     qm create ${vmids_list[1+$i]} --name "$vm_name" --core ${PVE_CORE} --memory ${PVE_MEMORY} --net0 virtio,bridge=vmbr8
     qm importdisk ${vmids_list[1+$i]} ubuntu-24.04.img local-lvm
+    qm rescan
     qm set ${vmids_list[1+$i]} --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-${vmids_list[1+$i]}-disk-0
     qm resize ${vmids_list[1+$i]} scsi0 +${PVE_VOLUME}G
     qm set ${vmids_list[1+$i]} --ide2 local-lvm:cloudinit
