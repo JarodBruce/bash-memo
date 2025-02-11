@@ -213,7 +213,6 @@ EOF
 cloud_init_path="11_template.cfg"
 echo "$cloud_init_config" > ${cloud_init_path}
 echo -e ' ' >> ${cloud_init_path}
-
 # イメージファイルのコピー
 if [ ! -f ubuntu-24.04-server-cloudimg-amd64.img ]; then
   wget https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img
